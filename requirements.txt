@@ -1,0 +1,13 @@
+fastapi
+uvicorn[standard]
+python-dotenv
+pydantic
+httpx
+# httpx is also used server-side in app/core/verify.py to call Cloudflare's
+# Turnstile siteverify API — already a dependency above, nothing new to add.
+requests
+pycryptodome
+google-play-scraper
+protobuf
+protobuf-decoder
+python-multipart
