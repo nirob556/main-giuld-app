@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Create account — ZBR FF GLORY</title>
 <link rel="stylesheet" href="/static/css/theme.css">
-<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
 <style>
   body{
     display:flex;align-items:center;justify-content:center;
@@ -51,7 +51,7 @@
     margin-bottom:8px;font-weight:600;
   }
   .field input{
-    width:100%;
+    width:100%;box-sizing:border-box;
     background:var(--bg);
     border:1px solid var(--border);
     color:var(--text);
@@ -104,6 +104,7 @@
   }
 </style>
 </head>
+
 <body>
   <div class="auth-shell">
     <form class="auth-card" id="registerForm" autocomplete="off">
@@ -115,34 +116,45 @@
           </svg>
         </div>
       </div>
+
       <div class="auth-title">Create your account</div>
       <div class="auth-sub">Join ZBR FF GLORY — start with a free wallet</div>
 
       <div class="field">
         <label for="username">Username</label>
-        <input type="text" id="username" name="username" placeholder="3-20 characters, letters/numbers/underscore" required autofocus autocapitalize="off" spellcheck="false" minlength="3" maxlength="20">
+        <input type="text" id="username" name="username"
+               placeholder="3-20 characters, letters/numbers/underscore"
+               required autofocus autocapitalize="off" spellcheck="false"
+               minlength="3" maxlength="20">
       </div>
+
       <div class="field">
         <label for="email">Email</label>
-        <input type="email" id="email" name="email" placeholder="you@example.com" required autocapitalize="off" spellcheck="false">
+        <input type="email" id="email" name="email"
+               placeholder="you@example.com" required
+               autocapitalize="off" spellcheck="false">
       </div>
+
       <div class="field">
         <label for="password">Password</label>
-        <input type="password" id="password" name="password" placeholder="At least 6 characters" required minlength="6">
-        <div class="field-hint">You'll start with a $0.00 balance — redeem a code or ask an admin to top it up. Each squad you build costs $1.00.</div>
-      </div>
-      <div class="field" style="display:flex;justify-content:center;margin-bottom:14px;">
-        <div class="cf-turnstile"
-             data-sitekey="__SITE_KEY__"
-             data-callback="onRegTurnstile"
-             data-expired-callback="onRegTurnstileExpired"
-             data-theme="auto">
+        <input type="password" id="password" name="password"
+               placeholder="At least 6 characters"
+               required minlength="6">
+        <div class="field-hint">
+          You'll start with a $0.00 balance — redeem a code or ask an admin to top it up. Each squad you build costs $1.00.
         </div>
       </div>
-      <button type="submit" class="btn-primary" id="registerBtn" disabled>Complete the check above</button>
-      <div class="auth-error" id="authError"></div>
 
-      <div class="auth-footer">Already have an account? <a href="/login" style="color:var(--brand);font-weight:650;">Sign in</a></div>
+      <button type="submit" class="btn-primary" id="registerBtn">
+        Create account
+      </button>
+
+      <div class="auth-error" id="authError" role="alert"></div>
+
+      <div class="auth-footer">
+        Already have an account?
+        <a href="/login" style="color:var(--brand);font-weight:650;">Sign in</a>
+      </div>
     </form>
   </div>
 
@@ -150,59 +162,74 @@
 const form = document.getElementById('registerForm');
 const err = document.getElementById('authError');
 const btn = document.getElementById('registerBtn');
-let turnstileToken = null;
 
-function onRegTurnstile(token){
-  turnstileToken = token;
-  btn.disabled = false;
-  btn.textContent = 'Create account';
-}
-function onRegTurnstileExpired(){
-  turnstileToken = null;
-  btn.disabled = true;
-  btn.textContent = 'Complete the check above';
-}
+function showError(msg) {
+  err.replaceChildren();
 
-function showError(msg){
-  err.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M15 9l-6 6M9 9l6 6"/></svg><span>${msg}</span>`;
+  const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  icon.setAttribute('viewBox', '0 0 24 24');
+  icon.setAttribute('fill', 'none');
+  icon.setAttribute('stroke', 'currentColor');
+  icon.setAttribute('stroke-width', '2.2');
+
+  const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+  circle.setAttribute('cx', '12');
+  circle.setAttribute('cy', '12');
+  circle.setAttribute('r', '9');
+
+  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  path.setAttribute('d', 'M15 9l-6 6M9 9l6 6');
+
+  icon.append(circle, path);
+
+  const span = document.createElement('span');
+  span.textContent = msg;
+
+  err.append(icon, span);
   err.style.display = 'flex';
 }
 
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
   err.style.display = 'none';
-  if (!turnstileToken) {
-    showError('Please complete the verification check.');
-    return;
-  }
-  btn.disabled = true; btn.textContent = 'Creating account...';
+
+  if (!form.reportValidity()) return;
+
+  btn.disabled = true;
+  btn.textContent = 'Creating account...';
+
   try {
     const res = await fetch('/api/auth/register', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
-        username: document.getElementById('username').value,
-        email: document.getElementById('email').value,
-        password: document.getElementById('password').value,
-        turnstile_token: turnstileToken,
-      }),
+        username: document.getElementById('username').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        password: document.getElementById('password').value
+      })
     });
-    const data = await res.json();
-    if (data.status === 'ok') {
+
+    const data = await res.json().catch(() => ({}));
+
+    if (res.ok && data.status === 'ok') {
       window.location.href = '/dashboard';
-    } else if (data.error) {
+      return;
+    }
+
+    if (data.error) {
       showError(data.error);
     } else if (Array.isArray(data.detail) && data.detail[0]) {
       showError(data.detail[0].msg || 'Could not create account');
     } else {
-      showError(typeof data.detail === 'string' ? data.detail : 'Could not create account');
+      showError(typeof data.detail === 'string'
+        ? data.detail
+        : 'Could not create account');
     }
-  } catch (e2) {
+  } catch (error) {
     showError('Network error. Please try again.');
   } finally {
-    turnstileToken = null;
-    if (window.turnstile) window.turnstile.reset();
-    btn.disabled = true; btn.textContent = 'Complete the check above';
+    btn.disabled = false;
+    btn.textContent = 'Create account';
   }
 });
 </script>
