@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Verifying — ZBR FF GLORY</title>
+<link rel="stylesheet" href="/static/css/theme.css">
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<style>
+  html,body{height:100%;}
+  body{
+    display:flex;align-items:center;justify-content:center;
+    min-height:100vh;min-height:100dvh;
+    background:
+      radial-gradient(900px 500px at 15% 0%, rgba(79,70,229,.10), transparent 60%),
+      radial-gradient(700px 500px at 85% 100%, rgba(124,58,237,.08), transparent 60%),
+      var(--bg);
+    padding:20px;
+    padding-top:calc(20px + env(safe-area-inset-top,0px));
+    padding-bottom:calc(20px + env(safe-area-inset-bottom,0px));
+  }
+  .gate-shell{width:440px;max-width:100%;text-align:center;}
+  .gate-card{
+    background:var(--surface);
+    border:1px solid var(--border-soft);
+    border-radius:20px;
+    padding:44px 36px;
+    box-shadow:var(--shadow-xl);
+  }
+  .gate-logo{
+    width:56px;height:56px;border-radius:16px;margin:0 auto 20px;
+    background:linear-gradient(145deg,var(--brand),#7c3aed);
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 12px 28px -8px rgba(79,70,229,.5);
+  }
+  .gate-logo svg{width:28px;height:28px;color:#fff;}
+  .gate-title{font-size:21px;font-weight:800;letter-spacing:-.4px;margin-bottom:8px;}
+  .gate-sub{color:var(--text-dim);font-size:13.5px;margin-bottom:28px;font-weight:500;line-height:1.5;}
+  .cf-turnstile{display:flex;justify-content:center;min-height:65px;}
+  .gate-status{
+    margin-top:18px;font-size:12.5px;color:var(--text-faint);
+    display:flex;align-items:center;justify-content:center;gap:8px;min-height:18px;
+  }
+  .gate-status.err{color:var(--red);}
+  .spinner{
+    width:14px;height:14px;border-radius:50%;
+    border:2px solid var(--border);border-top-color:var(--brand);
+    animation:spin .7s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .gate-retry{
+    margin-top:14px;padding:9px 18px;border-radius:9px;border:1px solid var(--border);
+    background:var(--bg);color:var(--text);font-weight:650;font-size:13px;cursor:pointer;
+    display:none;
+  }
+</style>
+</head>
+<body>
+  <div class="gate-shell">
+    <div class="gate-card">
+      <div class="gate-logo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2L3 7v6c0 5 4 8.5 9 9 5-.5 9-4 9-9V7l-9-5z"/>
+          <path d="M9 12l2 2 4-4"/>
+        </svg>
+      </div>
+      <div class="gate-title">Checking your browser</div>
+      <div class="gate-sub">This protects ZBR FF GLORY from automated abuse.<br>This only takes a second.</div>
+      <div class="cf-turnstile"
+           data-sitekey="__SITE_KEY__"
+           data-callback="onGateSolved"
+           data-error-callback="onGateError"
+           data-expired-callback="onGateExpired"
+           data-theme="auto">
+      </div>
+      <div class="gate-status" id="gateStatus"></div>
+      <button class="gate-retry" id="gateRetry" onclick="window.location.reload()">Try again</button>
+    </div>
+  </div>
+
+<script>
+const statusEl = document.getElementById('gateStatus');
+const retryBtn = document.getElementById('gateRetry');
+const params = new URLSearchParams(window.location.search);
+const dest = params.get('next') || '/';
+
+function setStatus(msg, isErr){
+  statusEl.textContent = msg || '';
+  statusEl.classList.toggle('err', !!isErr);
+}
+
+let submitting = false;
+
+async function onGateSolved(token){
+  if (submitting) return;
+  submitting = true;
+  setStatus('Verifying…');
+  const spin = document.createElement('div');
+  spin.className = 'spinner';
+  statusEl.prepend(spin);
+  try {
+    const res = await fetch('/api/verify/check', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ token }),
+    });
+    const data = await res.json();
+    if (data.status === 'ok') {
+      setStatus('Verified — redirecting…');
+      window.location.replace(dest.startsWith('/') ? dest : '/');
+    } else {
+      submitting = false;
+      setStatus(data.error || 'Verification failed, please retry.', true);
+      retryBtn.style.display = 'inline-block';
+      if (window.turnstile) window.turnstile.reset();
+    }
+  } catch (e) {
+    submitting = false;
+    setStatus('Network error, please retry.', true);
+    retryBtn.style.display = 'inline-block';
+  }
+}
+
+function onGateError(){
+  setStatus('Could not load the challenge. Check your connection and retry.', true);
+  retryBtn.style.display = 'inline-block';
+}
+
+function onGateExpired(){
+  setStatus('Challenge expired, please solve it again.', true);
+  if (window.turnstile) window.turnstile.reset();
+}
+</script>
+</body>
+</html>

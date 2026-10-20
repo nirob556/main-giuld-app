@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dashboard — ZBR FF GLORY</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/css/theme.css">
+</head>
+<body>
+<div class="app-shell">
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2L3 7v6c0 5 4 8.5 9 9 5-.5 9-4 9-9V7l-9-5z"/>
+          <path d="M9 12l2 2 4-4"/>
+        </svg>
+      </div>
+      <div class="name">ZBR FF GLORY<small>Squad Console</small></div>
+    </div>
+
+    <nav class="nav" id="navList">
+      <div class="nav-item active" data-view="dashboard">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+        Dashboard
+      </div>
+      <div class="nav-item" data-view="clients">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        Clients / Squads
+      </div>
+      <div class="nav-item" data-view="redeem">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M12 6v12"/><path d="M6 10a2 2 0 012-2M6 14a2 2 0 002 2M18 10a2 2 0 00-2-2M18 14a2 2 0 01-2 2"/></svg>
+        Redeem Codes
+      </div>
+      <div class="nav-item" data-view="settings">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06A1.65 1.65 0 005 9a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 5c.56-.24 1.18-.26 1.76-.06"/></svg>
+        Settings
+      </div>
+      <a class="nav-item hidden" id="adminNavLink" href="/admin">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/><path d="M9 12l2 2 4-4"/></svg>
+        Admin Panel
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="theme-toggle">
+        <span>Light theme</span>
+        <div class="switch" id="themeSwitch"><div class="knob"></div></div>
+      </div>
+      <div class="logout-link" id="logoutBtn">
+        <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+        Sign out
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="icon-btn menu-btn" id="menuBtn" aria-label="Open menu">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        </button>
+        <div>
+          <h1 id="viewTitle">Dashboard</h1>
+          <div class="sub" id="viewSub">Overview of all squad operations</div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="glory-pill" title="Wallet balance" id="balancePill">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5a2.5 2.5 0 012.5-1.5h.5a2 2 0 010 4h-1a2 2 0 000 4h.5a2.5 2.5 0 002.5-1.5"/></svg>
+          <span id="balanceAmount">$0.00</span>
+          <button class="glory-pill-add" id="addBalanceBtn" title="Add funds to your wallet balance" aria-label="Add Balance">
+            <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          </button>
+        </div>
+        <button class="btn btn-accent" id="newClientBtn" title="Add a new escort squad" aria-label="Add Escort">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          <span class="btn-label">Add Escort</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="content" id="content"></div>
+  </main>
+
+  <nav class="tab-bar" id="tabBar">
+    <div class="tab-item active" data-view="dashboard">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+      Home
+    </div>
+    <div class="tab-item" data-view="clients">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+      Clients
+    </div>
+    <div class="tab-item" data-view="redeem">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M12 6v12"/><path d="M6 10a2 2 0 012-2M6 14a2 2 0 002 2M18 10a2 2 0 00-2-2M18 14a2 2 0 01-2 2"/></svg>
+      Redeem
+    </div>
+    <div class="tab-item" data-view="settings">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06A1.65 1.65 0 005 9a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 5c.56-.24 1.18-.26 1.76-.06"/></svg>
+      Settings
+    </div>
+  </nav>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<!-- ============ Create Client Modal ============ -->
+<div class="modal-backdrop" id="createModalBackdrop">
+  <div class="modal" role="dialog" aria-labelledby="createModalTitle">
+    <div class="modal-head">
+      <h3 id="createModalTitle">New Client / Squad</h3>
+      <button class="icon-btn" id="closeCreateModal" aria-label="Close">
+        <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <form id="createClientForm" autocomplete="off">
+      <div class="form-row">
+        <label for="f_name">Client / Squad name</label>
+        <input type="text" id="f_name" placeholder="e.g. Jobayar's Squad #1" required maxlength="64">
+      </div>
+
+      <div class="form-row">
+        <label>Mode</label>
+        <div class="mode-pick">
+          <div class="mode-opt selected" data-mode="normal" role="button" tabindex="0">
+            <div class="t">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="7" r="4"/></svg>
+              Normal
+            </div>
+            <div class="d">4 bots play together automatically. No real player.</div>
+          </div>
+          <div class="mode-opt" data-mode="with_me" role="button" tabindex="0">
+            <div class="t">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+              Play with me
+            </div>
+            <div class="d">3 bots + your UID. Bots friend &amp; invite you.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row hidden" id="captainRow">
+        <label for="f_captain_uid">Your game UID</label>
+        <input type="text" id="f_captain_uid" placeholder="e.g. 8173189619" inputmode="numeric">
+        <div class="form-hint">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 16v-5"/><path d="M12 8h.01"/></svg>
+          Bots will send a friend request and team invite to this UID.
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label for="f_clan_id">Clan UID <span class="muted">(optional)</span></label>
+        <input type="text" id="f_clan_id" placeholder="Leave empty to skip clan join" inputmode="numeric">
+      </div>
+
+      <div class="form-row">
+        <label for="f_prefix">Bot name prefix</label>
+        <input type="text" id="f_prefix" value="ZIBON_" placeholder="ZIBON_" maxlength="16">
+        <div class="form-hint">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 16v-5"/><path d="M12 8h.01"/></svg>
+          New auto-generated accounts use this prefix.
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label for="f_notes">Notes <span class="muted">(optional)</span></label>
+        <textarea id="f_notes" rows="2" placeholder="Internal notes about this client..."></textarea>
+      </div>
+
+      <div class="cost-row">
+        <span class="muted">Cost</span>
+        <span class="cost-value">1 squad · $1.00</span>
+      </div>
+
+      <div class="modal-foot">
+        <button type="button" class="btn" id="cancelCreateBtn">Cancel</button>
+        <button type="submit" class="btn btn-accent" id="submitCreateBtn">Create &amp; Start</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ Add Balance Modal ============ -->
+<div class="modal-backdrop" id="addBalanceModalBackdrop">
+  <div class="modal" role="dialog" aria-labelledby="addBalanceModalTitle">
+    <div class="modal-head">
+      <h3 id="addBalanceModalTitle">Add Balance</h3>
+      <button class="icon-btn" id="closeAddBalanceModal" aria-label="Close">
+        <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <div class="form-row">
+      <label>Amount (USD)</label>
+      <div class="amount-stepper">
+        <button type="button" class="stepper-btn" id="amountDecBtn" aria-label="Decrease">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14"/></svg>
+        </button>
+        <div class="stepper-input-wrap">
+          <span class="stepper-prefix">$</span>
+          <input type="number" id="f_deposit_amount" min="1" step="1" value="1" inputmode="decimal">
+        </div>
+        <button type="button" class="stepper-btn" id="amountIncBtn" aria-label="Increase">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+      </div>
+      <div class="form-hint" id="depositLimitHint">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 16v-5"/><path d="M12 8h.01"/></svg>
+        Min $1.00 · Max $500.00
+      </div>
+    </div>
+
+    <div class="deposit-convert-card">
+      <div class="row">
+        <span class="muted">Exchange rate</span>
+        <span id="depositRateLabel">1 USD = 110 BDT</span>
+      </div>
+      <div class="row total">
+        <span>You pay</span>
+        <span id="depositBdtTotal">৳110.00</span>
+      </div>
+    </div>
+
+    <div class="modal-foot">
+      <button type="button" class="btn" id="cancelAddBalanceBtn">Cancel</button>
+      <button type="button" class="btn btn-accent" id="confirmPaymentBtn">Confirm Payment</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ Payment Status Modal ============ -->
+<div class="modal-backdrop" id="paymentStatusModalBackdrop">
+  <div class="modal" role="dialog" aria-labelledby="paymentStatusTitle" style="max-width:420px;text-align:center;">
+    <div id="paymentStatusBody" style="padding:28px 8px 8px;">
+      <div class="spinner" style="width:28px;height:28px;margin:0 auto 16px;"></div>
+      <h3 id="paymentStatusTitle">Checking payment…</h3>
+      <div class="muted" id="paymentStatusSub" style="margin-top:6px;font-size:13px;">Verifying with the payment gateway, this can take a few seconds.</div>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn btn-block" id="closePaymentStatusBtn">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ Create Redeem Code Modal ============ -->
+<div class="modal-backdrop" id="createCodeModalBackdrop">
+  <div class="modal" role="dialog" aria-labelledby="createCodeModalTitle">
+    <div class="modal-head">
+      <h3 id="createCodeModalTitle">Create Redeem Code</h3>
+      <button class="icon-btn" id="closeCreateCodeModal" aria-label="Close">
+        <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <form id="createCodeForm" autocomplete="off">
+      <div class="form-row">
+        <label for="f_code_amount">Amount (USD)</label>
+        <input type="number" id="f_code_amount" placeholder="e.g. 5" min="0.01" step="0.01" required>
+        <div class="form-hint">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 16v-5"/><path d="M12 8h.01"/></svg>
+          This amount is deducted from your balance now and locked into the code until someone redeems it.
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn" id="cancelCreateCodeBtn">Cancel</button>
+        <button type="submit" class="btn btn-accent" id="submitCreateCodeBtn">Generate Code</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="/static/js/api.js"></script>
+<script src="/static/js/toast.js"></script>
+<script src="/static/js/dashboard.js"></script>
+</body>
+</html>
